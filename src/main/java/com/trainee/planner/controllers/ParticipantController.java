@@ -1,6 +1,6 @@
 package com.trainee.planner.controllers;
 
-import com.trainee.planner.domain.participant.Participant;
+import com.trainee.planner.domain.participants.Participant;
 import com.trainee.planner.dto.participant.ParticipantRequestDTO;
 import com.trainee.planner.repositories.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;

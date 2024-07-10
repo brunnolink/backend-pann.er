@@ -1,11 +1,11 @@
 package com.trainee.planner.services.participant;
 
-import com.trainee.planner.domain.participant.Participant;
+import com.trainee.planner.domain.participants.Participant;
 import com.trainee.planner.domain.trip.Trip;
 import com.trainee.planner.dto.participant.ParticipantCreateResponseDTO;
+import com.trainee.planner.dto.participant.ParticipantData;
 import com.trainee.planner.repositories.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class ParticipantService {
 
     public void triggerConfirmationEmailToParticipant(String email){}
 
-    public List<Participant> getParticipants(UUID tripId) {
-        return this.participantRepository.findByTripId(tripId);
+    public List<ParticipantData> getAllParticipants(UUID tripId) {
+        return this.participantRepository.findByTripId(tripId).stream().map(participant -> new ParticipantData(participant.getId(), participant.getName(), participant.getEmail(), participant.getIsConfirmed())).toList();
     }
 }

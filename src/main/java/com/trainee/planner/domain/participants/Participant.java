@@ -1,4 +1,4 @@
-package com.trainee.planner.domain.participant;
+package com.trainee.planner.domain.participants;
 
 import com.trainee.planner.domain.trip.Trip;
 import jakarta.persistence.*;

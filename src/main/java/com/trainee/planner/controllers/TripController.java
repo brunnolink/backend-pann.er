@@ -1,8 +1,8 @@
 package com.trainee.planner.controllers;
 
-import com.trainee.planner.domain.participant.Participant;
 import com.trainee.planner.domain.trip.Trip;
 import com.trainee.planner.dto.participant.ParticipantCreateResponseDTO;
+import com.trainee.planner.dto.participant.ParticipantData;
 import com.trainee.planner.dto.participant.ParticipantRequestDTO;
 import com.trainee.planner.dto.trips.TripCreateResponse;
 import com.trainee.planner.dto.trips.TripRequestDTO;
@@ -95,9 +95,9 @@ public class TripController {
     }
 
     @GetMapping("/{id}/participants")
-    public ResponseEntity<List<Participant>> getAllParticipants(@PathVariable UUID id){
+    public ResponseEntity<List<ParticipantData>> getAllParticipants(@PathVariable UUID id){
 
-        List<Participant> participantList = this.participantService.getParticipants(id);
+        List<ParticipantData> participantList = this.participantService.getAllParticipants(id);
 
         return ResponseEntity.ok(participantList);
     }
