@@ -1,6 +1,6 @@
 package com.trainee.planner.domain.trip;
 
-import com.trainee.planner.dto.TripRequestDTO;
+import com.trainee.planner.dto.trips.TripRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
