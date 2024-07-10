@@ -1,4 +1,4 @@
-package com.trainee.planner.dto;
+package com.trainee.planner.dto.trips;
 
 import java.util.UUID;
 
