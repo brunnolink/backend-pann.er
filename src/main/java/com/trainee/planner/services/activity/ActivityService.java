@@ -1,11 +1,10 @@
 package com.trainee.planner.services.activity;
 
-import com.trainee.planner.domain.activities.Activity;
+import com.trainee.planner.domain.activity.Activity;
 import com.trainee.planner.domain.trip.Trip;
-import com.trainee.planner.dto.activities.ActivityData;
-import com.trainee.planner.dto.activities.ActivityRequestDTO;
-import com.trainee.planner.dto.activities.ActivityResponseDTO;
-import com.trainee.planner.dto.participant.ParticipantData;
+import com.trainee.planner.dto.activity.ActivityData;
+import com.trainee.planner.dto.activity.ActivityRequestDTO;
+import com.trainee.planner.dto.activity.ActivityResponseDTO;
 import com.trainee.planner.repositories.ActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.trainee.planner.dto.trips;
+package com.trainee.planner.dto.trip;
 
 import java.util.List;
 

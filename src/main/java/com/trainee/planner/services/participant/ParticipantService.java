@@ -1,6 +1,6 @@
 package com.trainee.planner.services.participant;
 
-import com.trainee.planner.domain.participants.Participant;
+import com.trainee.planner.domain.participant.Participant;
 import com.trainee.planner.domain.trip.Trip;
 import com.trainee.planner.dto.participant.ParticipantCreateResponseDTO;
 import com.trainee.planner.dto.participant.ParticipantData;

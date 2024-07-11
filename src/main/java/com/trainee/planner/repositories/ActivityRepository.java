@@ -1,7 +1,6 @@
 package com.trainee.planner.repositories;
 
-import com.trainee.planner.domain.activities.Activity;
-import com.trainee.planner.domain.participants.Participant;
+import com.trainee.planner.domain.activity.Activity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

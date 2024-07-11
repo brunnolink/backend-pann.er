@@ -1,4 +1,4 @@
-package com.trainee.planner.dto.activities;
+package com.trainee.planner.dto.activity;
 
 import java.util.UUID;
 

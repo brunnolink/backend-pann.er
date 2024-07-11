@@ -1,14 +1,14 @@
 package com.trainee.planner.controllers;
 
 import com.trainee.planner.domain.trip.Trip;
-import com.trainee.planner.dto.activities.ActivityData;
-import com.trainee.planner.dto.activities.ActivityRequestDTO;
-import com.trainee.planner.dto.activities.ActivityResponseDTO;
+import com.trainee.planner.dto.activity.ActivityData;
+import com.trainee.planner.dto.activity.ActivityRequestDTO;
+import com.trainee.planner.dto.activity.ActivityResponseDTO;
 import com.trainee.planner.dto.participant.ParticipantCreateResponseDTO;
 import com.trainee.planner.dto.participant.ParticipantData;
 import com.trainee.planner.dto.participant.ParticipantRequestDTO;
-import com.trainee.planner.dto.trips.TripCreateResponse;
-import com.trainee.planner.dto.trips.TripRequestDTO;
+import com.trainee.planner.dto.trip.TripCreateResponse;
+import com.trainee.planner.dto.trip.TripRequestDTO;
 import com.trainee.planner.repositories.TripRepository;
 import com.trainee.planner.services.activity.ActivityService;
 import com.trainee.planner.services.participant.ParticipantService;
