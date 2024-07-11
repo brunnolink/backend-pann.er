@@ -1,12 +1,15 @@
 package com.trainee.planner.controllers;
 
 import com.trainee.planner.domain.trip.Trip;
+import com.trainee.planner.dto.activities.ActivityRequestDTO;
+import com.trainee.planner.dto.activities.ActivityResponseDTO;
 import com.trainee.planner.dto.participant.ParticipantCreateResponseDTO;
 import com.trainee.planner.dto.participant.ParticipantData;
 import com.trainee.planner.dto.participant.ParticipantRequestDTO;
 import com.trainee.planner.dto.trips.TripCreateResponse;
 import com.trainee.planner.dto.trips.TripRequestDTO;
 import com.trainee.planner.repositories.TripRepository;
+import com.trainee.planner.services.activity.ActivityService;
 import com.trainee.planner.services.participant.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,9 @@ public class TripController {
     private TripRepository tripRepository;
     @Autowired
     private ParticipantService participantService;
+
+    @Autowired
+    private ActivityService activityService;
 
     @PostMapping
     public ResponseEntity<TripCreateResponse> createTrip(@RequestBody TripRequestDTO payload) {
@@ -100,5 +106,20 @@ public class TripController {
         List<ParticipantData> participantList = this.participantService.getAllParticipants(id);
 
         return ResponseEntity.ok(participantList);
+    }
+
+    @PostMapping("/{id}/activities")
+    public ResponseEntity<ActivityResponseDTO> registerActivity(@PathVariable UUID id, @RequestBody ActivityRequestDTO payload) {
+        Optional<Trip> trip = this.tripRepository.findById(id);
+
+        if(trip.isPresent()) {
+            Trip rawTrip = trip.get();
+
+            ActivityResponseDTO activityResponseDTO = this.activityService.saveActivity(payload, rawTrip);
+
+            return ResponseEntity.ok(activityResponseDTO);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }
