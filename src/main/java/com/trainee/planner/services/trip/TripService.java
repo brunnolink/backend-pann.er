@@ -1,5 +1,6 @@
 package com.trainee.planner.services.trip;
 
+import com.trainee.planner.domain.activity.exception.ActivityDateException;
 import com.trainee.planner.domain.trip.Trip;
 
 import com.trainee.planner.domain.trip.exception.TripCreationException;
@@ -94,7 +95,7 @@ public class TripService {
 
     //ACTIVITIES
     @PostMapping("/{id}/activities")
-    public ActivityResponseDTO registerActivity(UUID id, ActivityRequestDTO payload) throws Exception {
+    public ActivityResponseDTO registerActivity(UUID id, ActivityRequestDTO payload) throws ActivityDateException {
         Optional<Trip> trip = this.tripRepository.findById(id);
 
         if(trip.isPresent()) {
@@ -104,7 +105,7 @@ public class TripService {
 
             return activityResponseDTO;
         } else {
-            throw new Exception("Trip not found");
+            throw new ActivityDateException("Trip not found");
         }
     }
     //PARTICIPANTS
