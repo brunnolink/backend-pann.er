@@ -21,8 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,7 +49,7 @@ public class TripController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Trip> getTripDetails(@PathVariable UUID id) {
-        Optional<Trip> tripDetails = this.tripRepository.findById(id);
+        Optional<Trip> tripDetails = this.tripService.findById(id);
 
         return tripDetails.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }

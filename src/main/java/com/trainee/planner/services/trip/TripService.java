@@ -38,9 +38,13 @@ public class TripService {
             rawTrip.setStartsAt(LocalDateTime.parse(payload.starts_at(), DateTimeFormatter.ISO_DATE_TIME));
             rawTrip.setDestination(payload.destination());
 
-            this.tripRepository.save(rawTrip);
+            return this.tripRepository.save(rawTrip);
         } else {
             throw new Exception("Trip not found");
         }
+    }
+
+    public Optional<Trip> findById(UUID id) {
+        return this.tripRepository.findById(id);
     }
 }
