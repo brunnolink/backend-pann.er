@@ -16,6 +16,7 @@ import com.trainee.planner.repositories.TripRepository;
 import com.trainee.planner.services.activity.ActivityService;
 import com.trainee.planner.services.link.LinkService;
 import com.trainee.planner.services.participant.ParticipantService;
+import com.trainee.planner.services.trip.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,14 +38,14 @@ public class TripController {
     private ActivityService activityService;
     @Autowired
     private LinkService linkService;
+    @Autowired
+    private TripService tripService;
     //TRIPS
 
     @PostMapping
     public ResponseEntity<TripCreateResponse> createTrip(@RequestBody TripRequestDTO payload) {
-        Trip newTrip = new Trip(payload);
-        this.tripRepository.save(newTrip);
-        this.participantService.registerParticipantsToEvent(payload.emails_to_invite(), newTrip);
-        return ResponseEntity.ok(new TripCreateResponse(newTrip.getId()));
+        TripCreateResponse newTrip = this.tripService.createTrip(payload);
+        return ResponseEntity.ok(newTrip);
     }
 
     @GetMapping("/{id}")
@@ -56,18 +57,7 @@ public class TripController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Trip> updateTrip(@PathVariable UUID id, @RequestBody TripRequestDTO payload){
-        Optional<Trip> trip = this.tripRepository.findById(id);
-
-        if(trip.isPresent()) {
-            Trip rawTrip = trip.get();
-            rawTrip.setEndsAt(LocalDateTime.parse(payload.ends_at(), DateTimeFormatter.ISO_DATE_TIME));
-            rawTrip.setStartsAt(LocalDateTime.parse(payload.starts_at(), DateTimeFormatter.ISO_DATE_TIME));
-            rawTrip.setDestination(payload.destination());
-
-            this.tripRepository.save(rawTrip);
-
-            return ResponseEntity.ok(rawTrip);
-        }
+        Trip newTrip = this.tripService.updateTrip(id, payload);
 
         return ResponseEntity.notFound().build();
     }
