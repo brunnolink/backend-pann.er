@@ -29,7 +29,7 @@ public class TripService {
         return new TripCreateResponse(newTrip.getId());
     }
 
-    public Trip updateTrip(UUID id, TripRequestDTO payload) {
+    public Trip updateTrip(UUID id, TripRequestDTO payload) throws Exception {
         Optional<Trip> trip = this.tripRepository.findById(id);
 
         if (trip.isPresent()) {
@@ -39,6 +39,8 @@ public class TripService {
             rawTrip.setDestination(payload.destination());
 
             this.tripRepository.save(rawTrip);
+        } else {
+            throw new Exception("Trip not found");
         }
     }
 }

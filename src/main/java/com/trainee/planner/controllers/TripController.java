@@ -49,18 +49,23 @@ public class TripController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Trip> getTripDetails(@PathVariable UUID id){
+    public ResponseEntity<Trip> getTripDetails(@PathVariable UUID id) {
         Optional<Trip> tripDetails = this.tripRepository.findById(id);
 
         return tripDetails.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Trip> updateTrip(@PathVariable UUID id, @RequestBody TripRequestDTO payload){
-        Trip newTrip = this.tripService.updateTrip(id, payload);
-
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Trip> updateTrip(@PathVariable UUID id, @RequestBody TripRequestDTO payload) {
+        try {
+            Trip updatedTrip = this.tripService.updateTrip(id, payload);
+            return ResponseEntity.ok(updatedTrip);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
+
+
 
     @GetMapping("/{id}/confirm")
     public ResponseEntity<Trip> confirmTrip(@PathVariable UUID id){
