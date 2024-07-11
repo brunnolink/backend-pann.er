@@ -1,5 +1,6 @@
 package com.trainee.planner.controllers;
 
+import com.trainee.planner.domain.activity.exception.ActivityDateException;
 import com.trainee.planner.domain.trip.Trip;
 import com.trainee.planner.domain.trip.exception.TripNotFoundException;
 import com.trainee.planner.dto.activity.ActivityData;
@@ -42,7 +43,7 @@ public class TripController {
     //TRIPS
 
     @PostMapping
-    public ResponseEntity<TripCreateResponse> createTrip(@RequestBody TripRequestDTO payload) throws Exception {
+    public ResponseEntity<TripCreateResponse> createTrip(@RequestBody TripRequestDTO payload) {
         TripCreateResponse newTrip = this.tripService.createTrip(payload);
         return ResponseEntity.ok(newTrip);
     }
@@ -79,12 +80,12 @@ public class TripController {
 
     //ACTIVITIES
     @PostMapping("/{id}/activities")
-    public ResponseEntity<ActivityResponseDTO> registerActivity(@PathVariable UUID id, @RequestBody ActivityRequestDTO payload) {
+    public ResponseEntity<?> registerActivity(@PathVariable UUID id, @RequestBody ActivityRequestDTO payload) {
         try{
             ActivityResponseDTO newActivity = this.tripService.registerActivity(id, payload);
             return ResponseEntity.ok(newActivity);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+        } catch (ActivityDateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

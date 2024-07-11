@@ -1,5 +1,6 @@
 package com.trainee.planner.exception;
 
+import com.trainee.planner.domain.activity.exception.ActivityDateException;
 import com.trainee.planner.domain.trip.exception.TripCreationException;
 import com.trainee.planner.domain.trip.exception.TripNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleTripCreationException(TripCreationException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Invalid Input", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ActivityDateException.class)
+    public ResponseEntity<String> handleActivityDateException(ActivityDateException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     @ExceptionHandler(TripNotFoundException.class)
