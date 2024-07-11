@@ -1,6 +1,7 @@
 package com.trainee.planner.controllers;
 
 import com.trainee.planner.domain.trip.Trip;
+import com.trainee.planner.domain.trip.exception.TripNotFoundException;
 import com.trainee.planner.dto.activity.ActivityData;
 import com.trainee.planner.dto.activity.ActivityRequestDTO;
 import com.trainee.planner.dto.activity.ActivityResponseDTO;
@@ -18,6 +19,7 @@ import com.trainee.planner.services.link.LinkService;
 import com.trainee.planner.services.participant.ParticipantService;
 import com.trainee.planner.services.trip.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +32,6 @@ import java.util.UUID;
 @RequestMapping("/trips")
 public class TripController {
     @Autowired
-    private TripRepository tripRepository;
-    @Autowired
     private ParticipantService participantService;
     @Autowired
     private ActivityService activityService;
@@ -42,7 +42,7 @@ public class TripController {
     //TRIPS
 
     @PostMapping
-    public ResponseEntity<TripCreateResponse> createTrip(@RequestBody TripRequestDTO payload) {
+    public ResponseEntity<TripCreateResponse> createTrip(@RequestBody TripRequestDTO payload) throws Exception {
         TripCreateResponse newTrip = this.tripService.createTrip(payload);
         return ResponseEntity.ok(newTrip);
     }
@@ -67,12 +67,16 @@ public class TripController {
     @GetMapping("/{id}/confirm")
     public ResponseEntity<Trip> confirmTrip(@PathVariable UUID id) {
         try {
-            Trip confirmTrip = this.tripService.confirmTrip(id);
-            return ResponseEntity.ok(confirmTrip);
+            Trip confirmedTrip = tripService.confirmTrip(id);
+            return ResponseEntity.ok(confirmedTrip);
+        } catch (TripNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+
     //ACTIVITIES
     @PostMapping("/{id}/activities")
     public ResponseEntity<ActivityResponseDTO> registerActivity(@PathVariable UUID id, @RequestBody ActivityRequestDTO payload) {

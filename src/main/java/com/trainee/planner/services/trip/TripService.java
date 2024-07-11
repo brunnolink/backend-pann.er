@@ -1,6 +1,9 @@
 package com.trainee.planner.services.trip;
 
 import com.trainee.planner.domain.trip.Trip;
+
+import com.trainee.planner.domain.trip.exception.TripCreationException;
+import com.trainee.planner.domain.trip.exception.TripNotFoundException;
 import com.trainee.planner.dto.activity.ActivityRequestDTO;
 import com.trainee.planner.dto.activity.ActivityResponseDTO;
 import com.trainee.planner.dto.link.LinkRequestDTO;
@@ -14,14 +17,15 @@ import com.trainee.planner.services.activity.ActivityService;
 import com.trainee.planner.services.link.LinkService;
 import com.trainee.planner.services.participant.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,11 +41,21 @@ public class TripService {
     LinkService linkService;
 
     //TRIPS
-    public TripCreateResponse createTrip(TripRequestDTO payload) {
-        Trip newTrip = new Trip(payload);
-        this.tripRepository.save(newTrip);
-        this.participantService.registerParticipantsToEvent(payload.emails_to_invite(), newTrip);
-        return new TripCreateResponse(newTrip.getId());
+    public TripCreateResponse createTrip(TripRequestDTO payload){
+        try {
+            LocalDateTime startsAt = LocalDateTime.parse(payload.starts_at(), DateTimeFormatter.ISO_DATE_TIME);
+            LocalDateTime endsAt = LocalDateTime.parse(payload.ends_at(), DateTimeFormatter.ISO_DATE_TIME);
+            Trip newTrip = new Trip(payload);
+            newTrip.setStartsAt(startsAt);
+            newTrip.setEndsAt(endsAt);
+            this.tripRepository.save(newTrip);
+            return new TripCreateResponse(newTrip.getId());
+        } catch (DateTimeParseException e) {
+            throw new TripCreationException("Invalid date format: " + e.getMessage());
+        } catch (Exception e) {
+            throw new TripCreationException("Reveja se os campos foram preenchidos corretamente");
+        }
+
     }
 
     public Trip updateTrip(UUID id, TripRequestDTO payload) throws Exception {
@@ -59,18 +73,18 @@ public class TripService {
         }
     }
 
-    public Trip confirmTrip(UUID id) throws Exception {
+    public Trip confirmTrip(UUID id) {
         Optional<Trip> trip = this.tripRepository.findById(id);
 
         if (trip.isPresent()) {
             Trip rawTrip = trip.get();
             rawTrip.setIsConfirmed(true);
 
-             this.tripRepository.save(rawTrip);
-             this.participantService.triggerConfirmationEmailToParticipants(id);
-             return rawTrip;
-        } else {
-            throw new Exception("Trip not found");
+            this.tripRepository.save(rawTrip);
+            this.participantService.triggerConfirmationEmailToParticipants(id);
+            return rawTrip;
+        } else{
+            throw new TripNotFoundException("Trip not found with id: " + id);
         }
     }
 
