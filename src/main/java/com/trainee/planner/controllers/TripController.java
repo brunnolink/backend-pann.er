@@ -64,39 +64,24 @@ public class TripController {
         }
     }
 
-
-
     @GetMapping("/{id}/confirm")
-    public ResponseEntity<Trip> confirmTrip(@PathVariable UUID id){
-        Optional<Trip> trip = this.tripRepository.findById(id);
-
-        if(trip.isPresent()) {
-            Trip rawTrip = trip.get();
-            rawTrip.setIsConfirmed(true);
-
-            this.tripRepository.save(rawTrip);
-            this.participantService.triggerConfirmationEmailToParticipants(id);
-
-            return ResponseEntity.ok(rawTrip);
+    public ResponseEntity<Trip> confirmTrip(@PathVariable UUID id) {
+        try {
+            Trip confirmTrip = this.tripService.confirmTrip(id);
+            return ResponseEntity.ok(confirmTrip);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.notFound().build();
     }
-
     //ACTIVITIES
     @PostMapping("/{id}/activities")
     public ResponseEntity<ActivityResponseDTO> registerActivity(@PathVariable UUID id, @RequestBody ActivityRequestDTO payload) {
-        Optional<Trip> trip = this.tripRepository.findById(id);
-
-        if(trip.isPresent()) {
-            Trip rawTrip = trip.get();
-
-            ActivityResponseDTO activityResponseDTO = this.activityService.saveActivity(payload, rawTrip);
-
-            return ResponseEntity.ok(activityResponseDTO);
+        try{
+            ActivityResponseDTO newActivity = this.tripService.registerActivity(id, payload);
+            return ResponseEntity.ok(newActivity);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{id}/activities")
@@ -110,20 +95,12 @@ public class TripController {
     //PARTICIPANTS
     @PostMapping("/{id}/invite")
     public ResponseEntity<ParticipantCreateResponseDTO> inviteParticipant(@PathVariable UUID id, @RequestBody ParticipantRequestDTO payload) {
-        Optional<Trip> trip = this.tripRepository.findById(id);
-
-        if(trip.isPresent()) {
-            Trip rawTrip = trip.get();
-
-            ParticipantCreateResponseDTO participantResponseDTO = this.participantService.registerParticipantToEvent(payload.email(), rawTrip);
-
-            if(rawTrip.getIsConfirmed()) this.participantService.triggerConfirmationEmailToParticipant(payload.email());
-
-
-            return ResponseEntity.ok(participantResponseDTO);
+        try{
+            ParticipantCreateResponseDTO ParticipantCreateResponseDTO = this.tripService.inviteParticipant(id, payload);
+            return ResponseEntity.ok(ParticipantCreateResponseDTO);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{id}/participants")
@@ -138,17 +115,12 @@ public class TripController {
 
     @PostMapping("/{id}/links")
     public ResponseEntity<LinkResponseDTO> registerLink(@PathVariable UUID id, @RequestBody LinkRequestDTO payload) {
-        Optional<Trip> trip = this.tripRepository.findById(id);
-
-        if(trip.isPresent()) {
-            Trip rawTrip = trip.get();
-
-            LinkResponseDTO linkResponseDTO = this.linkService.registerLink(payload, rawTrip);
-
+        try{
+            LinkResponseDTO linkResponseDTO = this.tripService.registerLink(id, payload);
             return ResponseEntity.ok(linkResponseDTO);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{id}/links")
