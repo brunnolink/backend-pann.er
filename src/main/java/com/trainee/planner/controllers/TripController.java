@@ -1,6 +1,7 @@
 package com.trainee.planner.controllers;
 
 import com.trainee.planner.domain.trip.Trip;
+import com.trainee.planner.dto.activities.ActivityData;
 import com.trainee.planner.dto.activities.ActivityRequestDTO;
 import com.trainee.planner.dto.activities.ActivityResponseDTO;
 import com.trainee.planner.dto.participant.ParticipantCreateResponseDTO;
@@ -121,5 +122,13 @@ public class TripController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/{id}/activities")
+    public ResponseEntity<List<ActivityData>> getAllActivities(@PathVariable UUID id){
+
+        List<ActivityData> activitiesList = this.activityService.getAllActivities(id);
+
+        return ResponseEntity.ok(activitiesList);
     }
 }
