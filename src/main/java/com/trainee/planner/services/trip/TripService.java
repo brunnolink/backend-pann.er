@@ -46,9 +46,11 @@ public class TripService {
         try {
             LocalDateTime startsAt = LocalDateTime.parse(payload.starts_at(), DateTimeFormatter.ISO_DATE_TIME);
             LocalDateTime endsAt = LocalDateTime.parse(payload.ends_at(), DateTimeFormatter.ISO_DATE_TIME);
+
             Trip newTrip = new Trip(payload);
             newTrip.setStartsAt(startsAt);
             newTrip.setEndsAt(endsAt);
+
             this.tripRepository.save(newTrip);
             return new TripCreateResponse(newTrip.getId());
         } catch (DateTimeParseException e) {
