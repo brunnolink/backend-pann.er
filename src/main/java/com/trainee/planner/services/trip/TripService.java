@@ -48,6 +48,7 @@ public class TripService {
             LocalDateTime endsAt = LocalDateTime.parse(payload.ends_at(), DateTimeFormatter.ISO_DATE_TIME);
 
             Trip newTrip = new Trip(payload);
+            this.participantService.registerParticipantsToEvent(payload.emails_to_invite(), newTrip);
             newTrip.setStartsAt(startsAt);
             newTrip.setEndsAt(endsAt);
 

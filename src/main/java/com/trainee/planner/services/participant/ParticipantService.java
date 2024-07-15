@@ -5,11 +5,13 @@ import com.trainee.planner.domain.trip.Trip;
 import com.trainee.planner.dto.participant.ParticipantCreateResponseDTO;
 import com.trainee.planner.dto.participant.ParticipantData;
 import com.trainee.planner.repositories.ParticipantRepository;
+import com.trainee.planner.repositories.TripRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ParticipantService {
@@ -17,15 +19,26 @@ public class ParticipantService {
     @Autowired
     private ParticipantRepository participantRepository;
 
+    @Autowired
+    private TripRepository tripRepository;
 
     //Resgitrar convidados a partir da criação da viagem
     public void registerParticipantsToEvent(List<String> participantsToInvite, Trip trip){
-       List<Participant> participants = participantsToInvite.stream().map(email -> new Participant(email, trip)).toList();
+        Trip savedTrip = this.tripRepository.save(trip);
+
+
+        List<Participant> participants = participantsToInvite.stream()
+                .map(email -> new Participant(email, savedTrip))
+                .collect(Collectors.toList());
+
+
         this.participantRepository.saveAll(participants);
 
-//        System.out.println(participants.get(0).getId());
-//        System.out.println(participants.get(1).getId());
 
+        if (!participants.isEmpty()) {
+            System.out.println("IDs dos participantes:");
+            participants.forEach(participant -> System.out.println(participant.getId()));
+        }
     }
 
     //Convidar participantes, após criação da viagem
