@@ -39,4 +39,11 @@ public class Participant {
         this.isConfirmed = false;
         this.name = "";
     }
+
+    public Participant(String name, String email, Trip trip) {
+        this.email = email;
+        this.trip = trip;
+        this.isConfirmed = false;
+        this.name = name;
+    }
 }

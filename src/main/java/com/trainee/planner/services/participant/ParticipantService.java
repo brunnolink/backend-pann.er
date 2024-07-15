@@ -42,8 +42,10 @@ public class ParticipantService {
     }
 
     //Convidar participantes, após criação da viagem
-    public ParticipantCreateResponseDTO registerParticipantToEvent(String email, Trip trip){
-        Participant newParticipant = new Participant(email, trip);
+    public ParticipantCreateResponseDTO registerParticipantToEvent(String name, String email, Trip trip){
+        Participant newParticipant = new Participant(name, email, trip);
+
+
         this.participantRepository.save(newParticipant);
         return new ParticipantCreateResponseDTO(newParticipant.getId());
     }

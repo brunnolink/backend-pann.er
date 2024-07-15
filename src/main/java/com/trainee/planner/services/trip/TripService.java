@@ -118,7 +118,7 @@ public class TripService {
         if(trip.isPresent()) {
             Trip rawTrip = trip.get();
 
-            ParticipantCreateResponseDTO participantResponseDTO = this.participantService.registerParticipantToEvent(payload.email(), rawTrip);
+            ParticipantCreateResponseDTO participantResponseDTO = this.participantService.registerParticipantToEvent(payload.email(), payload.name(), rawTrip);
 
             if(rawTrip.getIsConfirmed()) this.participantService.triggerConfirmationEmailToParticipant(payload.email());
 
