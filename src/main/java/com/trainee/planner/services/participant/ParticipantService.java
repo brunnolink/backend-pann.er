@@ -4,12 +4,15 @@ import com.trainee.planner.domain.participant.Participant;
 import com.trainee.planner.domain.trip.Trip;
 import com.trainee.planner.dto.participant.ParticipantCreateResponseDTO;
 import com.trainee.planner.dto.participant.ParticipantData;
+import com.trainee.planner.dto.participant.ParticipantRequestDTO;
 import com.trainee.planner.repositories.ParticipantRepository;
 import com.trainee.planner.repositories.TripRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -59,5 +62,23 @@ public class ParticipantService {
     //Retorna uma lista com todos os participantes que estão convidados para a viagem
     public List<ParticipantData> getAllParticipants(UUID tripId) {
         return this.participantRepository.findByTripId(tripId).stream().map(participant -> new ParticipantData(participant.getId(), participant.getName(), participant.getEmail(), participant.getIsConfirmed())).toList();
+    }
+
+    public Participant participantConfirm(UUID id, ParticipantRequestDTO payload) throws Exception {
+        Optional<Participant> participant = this.participantRepository.findById(id);
+
+        if(participant.isPresent()) {
+            Participant rawParticipant = participant.get();
+            rawParticipant.setIsConfirmed(true);
+            rawParticipant.setName(payload.name());
+            rawParticipant.setEmail(payload.email());
+
+            this.participantRepository.save(rawParticipant);
+
+            return rawParticipant;
+        } else {
+            throw new Exception("Participant not found");
+        }
+
     }
 }
